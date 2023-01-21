@@ -5,33 +5,38 @@ import AddButton from './AddButton';
 import Fire from '../Fire';
 
 export default function MovieModal(props) {
-    const [title, setTitle] = useState("")
-    const [synopsis, setSynopsis] = useState("")
-    console.log(title, synopsis);
+    const [title, setTitle] = useState(props.movieEdit ? props.movieEdit.title : "")
+    const [synopsis, setSynopsis] = useState(props.movieEdit ? props.movieEdit.synopsis : "")
+    const [image, setImage] = useState(props.movieEdit ? props.movieEdit.image : "")
+    console.log(props);
 
     const handleSubmit = () => {
         const firebase = new Fire()
-        firebase.addMovie({
-            title: title,
-            synopsis: synopsis,
-            comments: []
+        let movie = {
+            "title": title,
+            "synopsis": synopsis,
+            "image": image,
+            "comments": []
         }
-        /* if (props.movie){
-            movie.id
-        } */
-        )
-        
+        if (props.movieEdit) {
+            movie.id = props.movieEdit.id;
+            movie.comments = props.movieEdit.comments;
+            firebase.updateMovie(movie);
+        } else {
+            firebase.addMovie(movie)
+        }
         props.onClose()
     }
+
 
     return (
         <View style={styles.container}>
             <Modal visible={props.isVisible} style={styles.modal}>
                 <View style={styles.centered}>
-                    <MovieForm title={title} synopsis={synopsis} handleTitleChange={newTitle => setTitle(newTitle)} handleSynopsisChange={newSynopsis => setSynopsis(newSynopsis)} />
+                    <MovieForm title={title} synopsis={synopsis} image={image} handleTitleChange={newTitle => setTitle(newTitle)} handleSynopsisChange={newSynopsis => setSynopsis(newSynopsis)} handleImageChange={newImage => setImage(newImage)} />
                     <View style={styles.button}>
                         <AddButton
-                            onPress={handleSubmit}
+                            onButtonPress={handleSubmit}
                             title={props.title}
                             content="Valider"
                         >
@@ -40,7 +45,7 @@ export default function MovieModal(props) {
 
                     <View style={styles.button}>
                         <AddButton
-                            onPress={props.onClose}
+                            onButtonPress={props.onClose}
                             title={props.content}
                             color="red"
                             content="Fermer">

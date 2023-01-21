@@ -34,6 +34,7 @@ export default class Fire {
     })
   }
 
+  
   addMovie (movie) {
     addDoc(collection(db, 'movies'), movie)
   }

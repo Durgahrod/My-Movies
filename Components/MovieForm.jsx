@@ -8,6 +8,8 @@ export default function MovieForm(props) {
             <TextInput placeholder="Titre" value={props.title} onChangeText={props.handleTitleChange} style={styles.inputFirst}></TextInput>
             <Text>Synopsis du film</Text>
             <TextInput multiline placeholder="Synopsis" value={props.synopsis} onChangeText={props.handleSynopsisChange} style={[styles.inputFirst, styles.inputSecond]}></TextInput>
+            <Text>Synopsis du film</Text>
+            <TextInput placeholder="Image (URL)" value={props.image} onChangeText={props.handleImageChange} style={styles.inputFirst}></TextInput>
         </View>
     )
 }
