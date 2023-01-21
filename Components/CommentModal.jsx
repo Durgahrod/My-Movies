@@ -1,32 +1,63 @@
 import { View, Text, Modal, Button, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import MovieForm from './MovieForm';
 import AddButton from './AddButton';
 import Fire from '../Fire';
+import CommentForm from './CommentForm';
 
-export default function MovieModal(props) {
-    const [title, setTitle] = useState("")
-    const [synopsis, setSynopsis] = useState("")
-    console.log(title, synopsis);
+export default function CommentModal(props) {
+    const [author, setAuthor] = useState(props.commentEdit ? props.commentEdit.author : "")
+    const [content, setContent] = useState(props.commentEdit ? props.commentEdit.content : "")
+    const [mark, setMark] = useState(props.commentEdit ? props.commentEdit.mark : "")
+    console.log(props);
 
     const handleSubmit = () => {
+        console.log(author, content, mark);
+
         const firebase = new Fire()
-        firebase.addMovie({
-            title: title,
-            synopsis: synopsis,
-            comments: []
-        })
+        let movie = {
+            "title": props.movie.title,
+            "synopsis": props.movie.synopsis,
+            "image": props.movie.image,
+            "comments": props.movie.comments
+        }
+        console.log("Movie:" + movie);
+        let comment = {
+            "author": author,
+            "content": content,
+            "mark": mark,
+        }
+        console.log("Comment:" + comment);
+        if (props.commentEdit) {
+            movie.id = props.movie.id;
+            movie.title = props.movie.title;
+            movie.synopsis = props.movie.synopsis;
+            movie.image = props.movie.image;
+            movie.comments = props.movie.comments;
+
+            firebase.updateMovie(movie);
+        } else {
+            movie.id = props.movie.id;
+            movie.title = props.movie.title;
+            movie.synopsis = props.movie.synopsis;
+            movie.image = props.movie.image;
+            props.movie.comments.push(comment);
+            console.log(props.movie);
+            movie.comments = props.movie.comments;
+            
+            firebase.updateMovie(movie);
+        }
         props.onClose()
     }
+
 
     return (
         <View style={styles.container}>
             <Modal visible={props.isVisible} style={styles.modal}>
                 <View style={styles.centered}>
-                    <MovieForm title={title} synopsis={synopsis} handleTitleChange={newTitle => setTitle(newTitle)} handleSynopsisChange={newSynopsis => setSynopsis(newSynopsis)} />
+                    <CommentForm author={author} content={content} mark={mark} handleAuthorChange={newAuthor => setAuthor(newAuthor)} handleContentChange={newContent => setContent(newContent)} handleMarkChange={newMark => setMark(newMark)} />
                     <View style={styles.button}>
                         <AddButton
-                            onPress={handleSubmit}
+                            onButtonPress={handleSubmit}
                             title={props.title}
                             content="Valider"
                         >
@@ -35,7 +66,7 @@ export default function MovieModal(props) {
 
                     <View style={styles.button}>
                         <AddButton
-                            onPress={props.onClose}
+                            onButtonPress={props.onClose}
                             title={props.content}
                             color="red"
                             content="Fermer">

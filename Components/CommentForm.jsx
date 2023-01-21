@@ -1,13 +1,24 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native'
-import React from 'react'
+import NumberPlease from "react-native-number-please";
+import React, { useState } from 'react'
 
-export default function MovieForm(props) {
+export default function CommentForm(props) {
+    const initialValue = [{ id: "pizza", value: 3 }]
+    const [mark, setMark] = useState(initialValue)
+    const markRange = [{ id: "markRange", min: 1, max: 5 }]
+
     return (
         <View style={styles.container}>
-            <Text>Titre du film</Text>
-            <TextInput placeholder="Titre" value={props.title} onChangeText={props.handleTitleChange} style={styles.inputFirst}></TextInput>
-            <Text>Synopsis du film</Text>
-            <TextInput multiline placeholder="Synopsis" value={props.synopsis} onChangeText={props.handleSynopsisChange} style={[styles.inputFirst, styles.inputSecond]}></TextInput>
+            <Text>Auteur</Text>
+            <TextInput placeholder="Auteur" value={props.title} onChangeText={props.handleTitleChange} style={styles.inputFirst}></TextInput>
+            <Text>Contenu</Text>
+            <TextInput multiline placeholder="Contenu" value={props.synopsis} onChangeText={props.handleSynopsisChange} style={[styles.inputFirst, styles.inputSecond]}></TextInput>
+            <Text>Note</Text>
+            <NumberPlease
+                digits={markRange}
+                values={mark}
+                onChange={(values) => setMark(values)}
+            />
         </View>
     )
 }
