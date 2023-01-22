@@ -3,21 +3,21 @@ import NumberPlease from "react-native-number-please";
 import React, { useState } from 'react'
 
 export default function CommentForm(props) {
-    const initialValue = [{ id: "pizza", value: 3 }]
+    const initialValue = [{ id: "markRange", value: 3 }]
     const [mark, setMark] = useState(initialValue)
-    const markRange = [{ id: "markRange", min: 1, max: 5 }]
+    const markRange = [{ id: "markRange", label: "", min: 1, max: 5 }]
 
     return (
         <View style={styles.container}>
             <Text>Auteur</Text>
-            <TextInput placeholder="Auteur" value={props.title} onChangeText={props.handleTitleChange} style={styles.inputFirst}></TextInput>
+            <TextInput placeholder="Auteur" value={props.author} onChangeText={props.handleAuthorChange} style={styles.inputFirst}></TextInput>
             <Text>Contenu</Text>
-            <TextInput multiline placeholder="Contenu" value={props.synopsis} onChangeText={props.handleSynopsisChange} style={[styles.inputFirst, styles.inputSecond]}></TextInput>
+            <TextInput multiline placeholder="Contenu" value={props.content} onChangeText={props.handleContentChange} style={[styles.inputFirst, styles.inputSecond]}></TextInput>
             <Text>Note</Text>
             <NumberPlease
                 digits={markRange}
                 values={mark}
-                onChange={(values) => setMark(values)}
+                onChange={[(values) => setMark(values), props.handleMarkChange]}
             />
         </View>
     )

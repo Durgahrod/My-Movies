@@ -1,6 +1,5 @@
 import { View, Text, Modal, Button, StyleSheet, TextInput, ActivityIndicator, ScrollView, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import CommentForm from './CommentForm';
 import AddButton from './AddButton';
 import Fire from '../Fire';
 import CommentModal from './CommentModal';
@@ -9,7 +8,15 @@ export default function CommentListModal(props) {
     const [isModalCommentVisible, setIsModalCommentVisible] = useState(false)
     const [selectedComment, setSelectedComment] = useState()
 
-    function deleteComment(comment) {
+    const initialComments = props.movie.comments
+    const [listComments, setListComments] = useState(initialComments)
+
+    function deleteComment(selectedComment) {
+        console.log(selectedComment);
+        const newListComments = listComments.filter((comment) => comment !== selectedComment)
+        console.log(newListComments);
+        setListComments(newListComments)
+
         const firebase = new Fire()
         let movie = {
             "title": props.movie.title,
@@ -21,8 +28,7 @@ export default function CommentListModal(props) {
         movie.title = props.movie.title;
         movie.synopsis = props.movie.synopsis;
         movie.image = props.movie.image;
-        movie.comments = props.movie.comments.push(comment);
-        movie.comments = props.movie.comments;
+        movie.comments = newListComments;
         firebase.updateMovie(movie);
     }
 
@@ -42,7 +48,14 @@ export default function CommentListModal(props) {
                     style={styles.icon}
                     source={'/assets/grenouille.png'}
                 />
-
+                <View style={styles.button}>
+                    <AddButton
+                        onButtonPress={props.onClose}
+                        title={props.content}
+                        color="red"
+                        content="Fermer">
+                    </AddButton>
+                </View>
                 <TextInput placeholder='Rechercher' style={styles.searchBar} onChangeText={handleFilter} />
                 <View style={styles.centered}>
                     <Image
@@ -56,7 +69,7 @@ export default function CommentListModal(props) {
                     {props.movie.title}
                 </Text>
                 <Text style={styles.title}>
-                    Commentaires
+                    Commentaires :
                 </Text>
                 <ScrollView>
                     {props.movie.comments.map((comment, i) => (
