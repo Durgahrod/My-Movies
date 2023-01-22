@@ -1,4 +1,5 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native'
+import DateField from 'react-native-datefield';
 import React from 'react'
 
 export default function MovieForm(props) {
@@ -10,6 +11,15 @@ export default function MovieForm(props) {
             <TextInput multiline placeholder="Synopsis" value={props.synopsis} onChangeText={props.handleSynopsisChange} style={[styles.inputFirst, styles.inputSecond]}></TextInput>
             <Text>Synopsis du film</Text>
             <TextInput placeholder="Image (URL)" value={props.image} onChangeText={props.handleImageChange} style={styles.inputFirst}></TextInput>
+            <Text>Date de sortie</Text>
+            <DateField
+                styleInput={styles.dateInput}
+                containerStyle={backgroundColor="white"}
+                labelDate="Jour"
+                labelMonth="Mois"
+                labelYear="Année"
+                onSubmit={(value) => console.log(value)}
+            />
         </View>
     )
 }
@@ -22,6 +32,12 @@ const styles = StyleSheet.create({
         padding: 30,
         marginBottom: 30,
     },
+    dateInput: {
+        backgroundColor: 'fff',
+        padding: 30,
+        marginBottom: 30,
+    }
+    ,
     inputFirst: {
         padding: 10,
         width: "90%",

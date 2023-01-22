@@ -11,6 +11,8 @@ export default function MovieModal(props) {
     console.log(props);
 
     const handleSubmit = () => {
+        console.log(title);
+
         const firebase = new Fire()
         let movie = {
             "title": title,

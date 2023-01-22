@@ -11,6 +11,7 @@ export default function App() {
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedMovie, setSelectedMovie] = useState()
+  const [filteredMovies, setFilteredMovies] = useState([]);
 
   useEffect(() => {
     const firebase = new Fire()
@@ -25,13 +26,58 @@ export default function App() {
     firebase.deleteMovie(movie)
   }
 
-  const handleFilter = (e) => {
+
+  const searchFilterFunction = (text) => {
+    // Check if searched text is not blank
+    if (text) {
+      // Inserted text is not blank
+      // Filter the masterDataSource and update FilteredDataSource
+      const newData = movies.filter(function (item) {
+        // Applying filter for the inserted text in search bar
+        const itemData = item.title
+          ? item.title.toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredDataSource(newData);
+      setSearch(text);
+    } else {
+      // Inserted text is blank
+      // Update FilteredDataSource with masterDataSource
+      setFilteredDataSource(masterDataSource);
+      setSearch(text);
+    }
+  };
+
+  function handleFilter(searchedTitle) {
+    if (searchedTitle !== "") {
+      console.log(searchedTitle);
+      const newListMovies = movies.filter((movies) => String(movies.movie.title).includes(searchedTitle));
+      console.log(newListMovies);
+      setMovies(newListMovies);
+    } else {
+      const firebase = new Fire()
+      firebase.getMovies(movies => {
+        setMovies(movies)
+        setLoading(false)
+      })
+    }
+
+  }
+  const handleFilter2 = (e) => {
     let moviesFilter = movies
     moviesFilter.filter(movie => {
       movie.title.includes(e);
     })
     setMovies(moviesFilter);
   };
+
+  function toDateTime(secs) {
+    var t = new Date(1970, 0, 1); // Epoch
+    t.setSeconds(secs);
+    return t;
+  }
 
   return (
     <View style={styles.container}>
@@ -62,6 +108,12 @@ export default function App() {
             <Text key={movie.id} style={styles.title}>
               {movie.title}
             </Text>
+
+            {/* {console.log(toDateTime(movie.releaseDate.seconds))} */}
+
+            {/* <Text>
+              {movie.releaseDate}
+            </Text> */}
             <ScrollView>
               <Text style={styles.content}>
                 {movie.synopsis}
@@ -102,7 +154,7 @@ const styles = StyleSheet.create({
     color: '#008000',
     fontSize: 30,
     fontWeight: 'bold',
-    fontFamily: 'Helvetica',
+    // fontFamily: 'Helvetica',
   },
   icon: {
     width: 50,
