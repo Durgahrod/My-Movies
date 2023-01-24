@@ -1,5 +1,6 @@
 import { View, Text, Modal, Button, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
+// import DatePicker from 'react-native-date-picker'
 import MovieForm from './MovieForm';
 import AddButton from './AddButton';
 import Fire from '../Fire';
@@ -8,6 +9,7 @@ export default function MovieModal(props) {
     const [title, setTitle] = useState(props.movieEdit ? props.movieEdit.title : "")
     const [synopsis, setSynopsis] = useState(props.movieEdit ? props.movieEdit.synopsis : "")
     const [image, setImage] = useState(props.movieEdit ? props.movieEdit.image : "")
+    const [releaseDate, setReleaseDate] = useState(props.movieEdit ? props.movieEdit.releaseDate : new Date())
     console.log(props);
 
     const handleSubmit = () => {
@@ -18,6 +20,7 @@ export default function MovieModal(props) {
             "title": title,
             "synopsis": synopsis,
             "image": image,
+            "releaseDate": releaseDate,
             "comments": []
         }
         if (props.movieEdit) {
@@ -35,7 +38,7 @@ export default function MovieModal(props) {
         <View style={styles.container}>
             <Modal visible={props.isVisible} style={styles.modal}>
                 <View style={styles.centered}>
-                    <MovieForm title={title} synopsis={synopsis} image={image} handleTitleChange={newTitle => setTitle(newTitle)} handleSynopsisChange={newSynopsis => setSynopsis(newSynopsis)} handleImageChange={newImage => setImage(newImage)} />
+                    <MovieForm title={title} synopsis={synopsis} image={image} date={releaseDate} handleTitleChange={newTitle => setTitle(newTitle)} handleSynopsisChange={newSynopsis => setSynopsis(newSynopsis)} handleImageChange={newImage => setImage(newImage)} handleDateChange={newDate => setDate(newDate)} />
                     <View style={styles.button}>
                         <AddButton
                             onButtonPress={handleSubmit}

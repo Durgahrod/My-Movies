@@ -1,5 +1,6 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native'
 import DateField from 'react-native-datefield';
+// import DatePicker from 'react-native-date-picker'
 import React from 'react'
 
 export default function MovieForm(props) {
@@ -12,14 +13,15 @@ export default function MovieForm(props) {
             <Text>Synopsis du film</Text>
             <TextInput placeholder="Image (URL)" value={props.image} onChangeText={props.handleImageChange} style={styles.inputFirst}></TextInput>
             <Text>Date de sortie</Text>
-            <DateField
+            <TextInput placeholder="JJ/MM/AAAA" value={props.date} onChangeText={props.handleDateChange} style={styles.inputFirst}></TextInput>
+            {/* <DatePicker date={date} onDateChange={props.handleDateChange} /> */}
+            {/* <DateField
                 styleInput={styles.dateInput}
-                containerStyle={backgroundColor="white"}
                 labelDate="Jour"
                 labelMonth="Mois"
                 labelYear="Année"
                 onSubmit={(value) => console.log(value)}
-            />
+            /> */}
         </View>
     )
 }

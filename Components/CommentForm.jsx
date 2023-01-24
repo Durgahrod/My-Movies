@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 export default function CommentForm(props) {
     const initialValue = [{ id: "markRange", value: 3 }]
-    const [mark, setMark] = useState(initialValue)
+    const [mark, setMark] = useState(initialValue.value)
     const markRange = [{ id: "markRange", label: "", min: 1, max: 5 }]
 
     return (
