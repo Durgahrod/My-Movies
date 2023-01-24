@@ -11,6 +11,16 @@ export default function CommentListModal(props) {
     const initialComments = props.movie.comments
     const [listComments, setListComments] = useState(initialComments)
 
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const firebase = new Fire()
+        firebase.getMovies(movies => {
+            setListComments(props.movie.comments)
+            setLoading(false)
+        })
+    }, [])
+
     function deleteComment(selectedComment) {
         console.log(selectedComment);
         const newListComments = listComments.filter((comment) => comment !== selectedComment)
@@ -57,6 +67,9 @@ export default function CommentListModal(props) {
                     </AddButton>
                 </View>
                 <TextInput placeholder='Rechercher' style={styles.searchBar} onChangeText={handleFilter} />
+                <View>
+                    {loading && <ActivityIndicator />}
+                </View>
                 <View style={styles.centered}>
                     <Image
                         style={styles.image}

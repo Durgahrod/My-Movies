@@ -23,27 +23,38 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 export default class Fire {
-  getMovies (callback) {
-    const q = query(collection(db, 'movies'), orderBy('title', 'asc'))
-    onSnapshot(q, snapshot => {
-      let movies = []
-      snapshot.forEach(doc => {
-        movies.push({ id: doc.id, ...doc.data() })
+  getMovies(callback, secret) {
+    if (secret == true) {
+      const q = query(collection(db, 'movies-secret'), orderBy('title', 'asc'))
+      onSnapshot(q, snapshot => {
+        let movies = []
+        snapshot.forEach(doc => {
+          movies.push({ id: doc.id, ...doc.data() })
+        })
+        callback(movies)
       })
-      callback(movies)
-    })
+    } else {
+      const q = query(collection(db, 'movies'), orderBy('title', 'asc'))
+      onSnapshot(q, snapshot => {
+        let movies = []
+        snapshot.forEach(doc => {
+          movies.push({ id: doc.id, ...doc.data() })
+        })
+        callback(movies)
+      })
+    }
   }
 
-  
-  addMovie (movie) {
+
+  addMovie(movie) {
     addDoc(collection(db, 'movies'), movie)
   }
 
-  updateMovie (movie) {
+  updateMovie(movie) {
     updateDoc(doc(db, 'movies', movie.id), movie)
   }
 
-  deleteMovie (movie) {
+  deleteMovie(movie) {
     deleteDoc(doc(db, 'movies', movie.id))
   }
 }

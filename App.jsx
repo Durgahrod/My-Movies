@@ -12,13 +12,22 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [selectedMovie, setSelectedMovie] = useState()
   const [filteredMovies, setFilteredMovies] = useState([]);
+  const [secret, setSecret] = useState(false)
 
   useEffect(() => {
     const firebase = new Fire()
-    firebase.getMovies(movies => {
-      setMovies(movies)
-      setLoading(false)
-    })
+    if (secret == true) {
+      firebase.getMovies(movies, secret => {
+        setMovies(movies)
+        setLoading(false)
+      })
+    } else {
+      firebase.getMovies(movies => {
+        setMovies(movies)
+        setLoading(false)
+      })
+    }
+
   }, [])
 
   function deleteMovie(movie) {
@@ -81,6 +90,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <AddButton key="secret" content="Secret" onButtonPress={() => setSecret(true)} />
       <Text style={styles.title}>Bienvenu sur</Text>
       <Text style={styles.frog}>Froggy Movies</Text>
       <Image
