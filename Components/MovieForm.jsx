@@ -1,9 +1,8 @@
-import { View, Text, TextInput, StyleSheet } from 'react-native'
-import DateField from 'react-native-datefield';
-// import DatePicker from 'react-native-date-picker'
-import React from 'react'
+import { View, Text, TextInput, StyleSheet, Button } from 'react-native'
+import React, { useState } from 'react'
 
 export default function MovieForm(props) {
+
     return (
         <View style={styles.container}>
             <Text>Titre du film</Text>
@@ -12,16 +11,6 @@ export default function MovieForm(props) {
             <TextInput multiline placeholder="Synopsis" value={props.synopsis} onChangeText={props.handleSynopsisChange} style={[styles.inputFirst, styles.inputSecond]}></TextInput>
             <Text>Synopsis du film</Text>
             <TextInput placeholder="Image (URL)" value={props.image} onChangeText={props.handleImageChange} style={styles.inputFirst}></TextInput>
-            <Text>Date de sortie</Text>
-            <TextInput placeholder="JJ/MM/AAAA" value={props.date} onChangeText={props.handleDateChange} style={styles.inputFirst}></TextInput>
-            {/* <DatePicker date={date} onDateChange={props.handleDateChange} /> */}
-            {/* <DateField
-                styleInput={styles.dateInput}
-                labelDate="Jour"
-                labelMonth="Mois"
-                labelYear="Année"
-                onSubmit={(value) => console.log(value)}
-            /> */}
         </View>
     )
 }
@@ -33,13 +22,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 30,
         marginBottom: 30,
+        width: "90%"
     },
-    dateInput: {
-        backgroundColor: 'fff',
-        padding: 30,
-        marginBottom: 30,
-    }
-    ,
     inputFirst: {
         padding: 10,
         width: "90%",
@@ -49,6 +33,10 @@ const styles = StyleSheet.create({
         height: 40
     },
     inputSecond: {
-        height: 120
+        height: 120,
+        flexWrap: 'wrap',
+    },
+    synopsisWrap: {
+        flexWrap: 'wrap',
     }
 });

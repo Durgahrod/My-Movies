@@ -11,58 +11,54 @@ export default function App() {
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedMovie, setSelectedMovie] = useState()
-  const [filteredMovies, setFilteredMovies] = useState([]);
   const [secret, setSecret] = useState(false)
+  const [alphaAsc, setAlphaAsc] = useState(true)
 
   useEffect(() => {
-    const firebase = new Fire()
-    if (secret == true) {
-      firebase.getMovies(movies, secret => {
-        setMovies(movies)
-        setLoading(false)
-      })
-    } else {
-      firebase.getMovies(movies => {
-        setMovies(movies)
-        setLoading(false)
-      })
-    }
+    if (secret == false) {
+      if (alphaAsc == true) {
+        const firebase = new Fire()
 
+        firebase.getMovies((movies) => {
+          setMovies(movies)
+          setLoading(false)
+        })
+      } else {
+        const firebase = new Fire()
+
+        firebase.getMoviesDesc((movies) => {
+          setMovies(movies)
+          setLoading(false)
+        })
+      }
+    } else {
+      if (alphaAsc == true) {
+        const firebase = new Fire()
+
+        firebase.getMoviesSecret((movies) => {
+          setMovies(movies)
+          setLoading(false)
+        })
+      } else {
+        const firebase = new Fire()
+
+        firebase.getMoviesSecretDesc((movies) => {
+          setMovies(movies)
+          setLoading(false)
+        })
+      }
+    }
   }, [])
 
-  function deleteMovie(movie) {
+  function deleteMovie(movie, secret) {
     const firebase = new Fire()
-    firebase.deleteMovie(movie)
+    firebase.deleteMovie(movie, secret)
   }
-
-
-  const searchFilterFunction = (text) => {
-    // Check if searched text is not blank
-    if (text) {
-      // Inserted text is not blank
-      // Filter the masterDataSource and update FilteredDataSource
-      const newData = movies.filter(function (item) {
-        // Applying filter for the inserted text in search bar
-        const itemData = item.title
-          ? item.title.toUpperCase()
-          : ''.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilteredDataSource(newData);
-      setSearch(text);
-    } else {
-      // Inserted text is blank
-      // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(masterDataSource);
-      setSearch(text);
-    }
-  };
 
   function handleFilter(searchedTitle) {
     if (searchedTitle !== "") {
       console.log(searchedTitle);
-      const newListMovies = movies.filter((movies) => String(movies.movie.title).includes(searchedTitle));
+      const newListMovies = movies.filter((movies) => String(movies.title).includes(searchedTitle));
       console.log(newListMovies);
       setMovies(newListMovies);
     } else {
@@ -72,42 +68,44 @@ export default function App() {
         setLoading(false)
       })
     }
-
-  }
-  const handleFilter2 = (e) => {
-    let moviesFilter = movies
-    moviesFilter.filter(movie => {
-      movie.title.includes(e);
-    })
-    setMovies(moviesFilter);
-  };
-
-  function toDateTime(secs) {
-    var t = new Date(1970, 0, 1); // Epoch
-    t.setSeconds(secs);
-    return t;
   }
 
   return (
     <View style={styles.container}>
-      <AddButton key="secret" content="Secret" onButtonPress={() => setSecret(true)} />
+      <AddButton key="orderBy" content="Ordre alphabetique" onButtonPress={() => { if (alphaAsc == true) { setAlphaAsc(false) } else { setAlphaAsc(true) }; console.log(alphaAsc); }} />
       <Text style={styles.title}>Bienvenu sur</Text>
       <Text style={styles.frog}>Froggy Movies</Text>
-      <Image
-        style={styles.icon}
-        source={"./assets/grenouille.png"}
-      />
+      <View>
+        {secret && <Text style={styles.secretText}>HARD</Text>}
+      </View>
+      <View>
+        {secret ?
+          <Image
+            key="icon"
+            style={styles.icon}
+            source={require("./assets/grenouille-HARD.png")}
+          />
+          :
+          <Image
+            key="icon-HARD"
+            style={styles.icon}
+            source={require("./assets/grenouille.png")}
+          />
+        }
+      </View>
 
-      <TextInput placeholder='Rechercher' style={styles.searchBar} onChangeText={handleFilter} />
+
+      <TextInput key="searchbar" placeholder='Rechercher' style={styles.searchBar} onChangeText={handleFilter} />
 
       <View>
-        {loading && <ActivityIndicator />}
+        {loading && <ActivityIndicator key="movies-loading" />}
       </View>
       <ScrollView>
         {movies.map(movie => (
           <View style={styles.scrollView}>
             <View style={styles.centered}>
               <Image
+                key={movie.id + 'image'}
                 style={styles.image}
                 source={{
                   uri: movie.image,
@@ -115,17 +113,13 @@ export default function App() {
               />
             </View>
 
-            <Text key={movie.id} style={styles.title}>
+            <Text key={movie.id + 'title'} style={styles.title}>
               {movie.title}
             </Text>
-
-            {/* {console.log(toDateTime(movie.releaseDate.seconds))} */}
-
-            {/* <Text>
-              {movie.releaseDate}
-            </Text> */}
-            <ScrollView>
-              <Text style={styles.content}>
+            <ScrollView style={styles.synopsis}>
+              <Text
+                key={movie.id + 'synopsis'}
+                style={styles.content}>
                 {movie.synopsis}
               </Text>
             </ScrollView>
@@ -133,21 +127,28 @@ export default function App() {
             <View style={styles.buttons}>
               <AddButton key={movie.id + "edit"} onButtonPress={() => { setIsModalMovieVisible(true); setSelectedMovie(movie) }} content="Modifier" buttonColor="orange" />
 
-              <AddButton key={movie.id + "delete"} onButtonPress={() => deleteMovie(movie)} content="Supprimer" buttonColor="red" />
+              <AddButton key={movie.id + "delete"} onButtonPress={() => deleteMovie(movie, secret)} content="Supprimer" buttonColor="red" />
             </View>
             <View style={styles.buttons}>
-              <AddButton onButtonPress={() => { setIsModalCommentListVisible(true); setSelectedMovie(movie) }} content="Commentaires" buttonColor="dodgerblue" />
+              <AddButton key={movie.id + "comments"} onButtonPress={() => { setIsModalCommentListVisible(true); setSelectedMovie(movie) }} content="Commentaires" buttonColor="dodgerblue" />
             </View>
           </View>
         ))}
+
+
         {isModalMovieVisible && (
-          <MovieModal isVisible={isModalMovieVisible} onClose={() => setIsModalMovieVisible(false)} movieEdit={selectedMovie} content="Fermer" />
+          <MovieModal isVisible={isModalMovieVisible} onClose={() => { setIsModalMovieVisible(false); setSelectedMovie("") }} movieEdit={selectedMovie} content="Fermer" secret={secret} />
         )}
         {isModalCommentListVisible && (
-          <CommentListModal isVisible={isModalCommentListVisible} onClose={() => setIsModalCommentListVisible(false)} movie={selectedMovie} content="Fermer" />
+          <CommentListModal isVisible={isModalCommentListVisible} onClose={() => { setIsModalCommentListVisible(false); setSelectedMovie("") }} movie={selectedMovie} content="Fermer" secret={secret} />
         )}
       </ScrollView>
-      <AddButton onButtonPress={() => setIsModalMovieVisible(true)} content="Ajouter un film" buttonColor="#008000" />
+
+
+      <AddButton key="add Movie" onButtonPress={() => setIsModalMovieVisible(true)} content="Ajouter un film" buttonColor="#008000" />
+      <View style={styles.hardButton}>
+        <AddButton key="secret" content="+18" onButtonPress={() => { if (secret == true) { setSecret(false) } else { setSecret(true) }; console.log(secret); }} buttonColor="red" />
+      </View>
     </View>
   );
 }
@@ -169,6 +170,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 50,
     height: 50,
+    margin: 5
   },
   bgBlue: {
     backgroundColor: 'dodgerblue',
@@ -203,10 +205,13 @@ const styles = StyleSheet.create({
   },
   content: {
     textAlign: 'center',
-    flexWrap: 'wrap',
     fontSize: 15,
     padding: 10,
-
+  },
+  synopsis: {
+    heightMax: 150,
+    margin: 5,
+    padding: 10,
   },
   buttons: {
     flexDirection: 'row',
@@ -215,5 +220,15 @@ const styles = StyleSheet.create({
   },
   buttonModif: {
     size: 'small'
+  },
+  secretText: {
+    color: 'red',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  hardButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 5
   }
 });

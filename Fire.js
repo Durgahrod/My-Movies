@@ -23,38 +23,72 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 export default class Fire {
-  getMovies(callback, secret) {
-    if (secret == true) {
-      const q = query(collection(db, 'movies-secret'), orderBy('title', 'asc'))
-      onSnapshot(q, snapshot => {
-        let movies = []
-        snapshot.forEach(doc => {
-          movies.push({ id: doc.id, ...doc.data() })
-        })
-        callback(movies)
+  getMovies(callback) {
+    const q = query(collection(db, 'movies'), orderBy('title', 'asc'))
+    onSnapshot(q, snapshot => {
+      let movies = []
+      snapshot.forEach(doc => {
+        movies.push({ id: doc.id, ...doc.data() })
       })
+      callback(movies)
+    })
+  }
+
+  getMoviesDesc(callback) {
+    const q = query(collection(db, 'movies'), orderBy('title', 'desc'))
+    onSnapshot(q, snapshot => {
+      let movies = []
+      snapshot.forEach(doc => {
+        movies.push({ id: doc.id, ...doc.data() })
+      })
+      callback(movies)
+    })
+  }
+
+  getMoviesSecret(callback) {
+    const q = query(collection(db, 'movies-secret'), orderBy('title', 'asc'))
+    onSnapshot(q, snapshot => {
+      let movies = []
+      snapshot.forEach(doc => {
+        movies.push({ id: doc.id, ...doc.data() })
+      })
+      callback(movies)
+    })
+  }
+
+  getMoviesSecretDesc(callback) {
+    const q = query(collection(db, 'movies-secret'), orderBy('title', 'desc'))
+    onSnapshot(q, snapshot => {
+      let movies = []
+      snapshot.forEach(doc => {
+        movies.push({ id: doc.id, ...doc.data() })
+      })
+      callback(movies)
+    })
+  }
+
+
+  addMovie(movie, secret) {
+    if (secret == false) {
+      addDoc(collection(db, 'movies'), movie)
     } else {
-      const q = query(collection(db, 'movies'), orderBy('title', 'asc'))
-      onSnapshot(q, snapshot => {
-        let movies = []
-        snapshot.forEach(doc => {
-          movies.push({ id: doc.id, ...doc.data() })
-        })
-        callback(movies)
-      })
+      addDoc(collection(db, 'movies-secret'), movie)
     }
   }
 
-
-  addMovie(movie) {
-    addDoc(collection(db, 'movies'), movie)
+  updateMovie(movie, secret) {
+    if (secret == false) {
+      updateDoc(doc(db, 'movies', movie.id), movie)
+    } else {
+      updateDoc(doc(db, 'movies-secret', movie.id), movie)
+    }
   }
 
-  updateMovie(movie) {
-    updateDoc(doc(db, 'movies', movie.id), movie)
-  }
-
-  deleteMovie(movie) {
-    deleteDoc(doc(db, 'movies', movie.id))
+  deleteMovie(movie, secret) {
+    if (secret == false) {
+      deleteDoc(doc(db, 'movies', movie.id))
+    } else {
+      deleteDoc(doc(db, 'movies-secret', movie.id))
+    }
   }
 }

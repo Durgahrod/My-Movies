@@ -11,35 +11,20 @@ export default function CommentListModal(props) {
     const initialComments = props.movie.comments
     const [listComments, setListComments] = useState(initialComments)
 
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
-        const firebase = new Fire()
-        firebase.getMovies(movies => {
-            setListComments(props.movie.comments)
-            setLoading(false)
-        })
-    }, [])
-
     function deleteComment(selectedComment) {
-        console.log(selectedComment);
+        const firebase = new Fire()
         const newListComments = listComments.filter((comment) => comment !== selectedComment)
         console.log(newListComments);
-        setListComments(newListComments)
 
-        const firebase = new Fire()
         let movie = {
+            "id": props.movie.id,
             "title": props.movie.title,
             "synopsis": props.movie.synopsis,
             "image": props.movie.image,
-            "comments": props.movie.comments
+            "comments": newListComments
         }
-        movie.id = props.movie.id;
-        movie.title = props.movie.title;
-        movie.synopsis = props.movie.synopsis;
-        movie.image = props.movie.image;
-        movie.comments = newListComments;
-        firebase.updateMovie(movie);
+        setListComments(newListComments)
+        firebase.updateMovie(movie, props.secret);
     }
 
     const handleFilter = (e) => {
@@ -67,9 +52,6 @@ export default function CommentListModal(props) {
                     </AddButton>
                 </View>
                 <TextInput placeholder='Rechercher' style={styles.searchBar} onChangeText={handleFilter} />
-                <View>
-                    {loading && <ActivityIndicator />}
-                </View>
                 <View style={styles.centered}>
                     <Image
                         style={styles.image}
@@ -85,9 +67,9 @@ export default function CommentListModal(props) {
                     Commentaires :
                 </Text>
                 <ScrollView>
-                    {props.movie.comments.map((comment, i) => (
-                        <View style={styles.scrollView}>
-                            <Text key={comment + i} style={styles.title}>
+                    {listComments.map((comment, i) => (
+                        <View key={comment + i} style={styles.scrollView}>
+                            <Text style={styles.title}>
                                 {comment.author}
                             </Text>
                             <ScrollView>
@@ -104,7 +86,7 @@ export default function CommentListModal(props) {
                         </View>
                     ))}
                     {isModalCommentVisible && (
-                        <CommentModal isVisible={isModalCommentVisible} onClose={() => setIsModalCommentVisible(false)} movie={props.movie} commentEdit={selectedComment} content="Fermer" />
+                        <CommentModal isVisible={isModalCommentVisible} onClose={() => setIsModalCommentVisible(false)} movie={props.movie} commentEdit={selectedComment} content="Fermer" secret={props.secret} />
                     )}
                 </ScrollView>
                 <AddButton onButtonPress={() => setIsModalCommentVisible(true)} content="Ajouter un commentaire" buttonColor="#008000" />

@@ -14,11 +14,11 @@ export default function CommentForm(props) {
             <Text>Contenu</Text>
             <TextInput multiline placeholder="Contenu" value={props.content} onChangeText={props.handleContentChange} style={[styles.inputFirst, styles.inputSecond]}></TextInput>
             <Text>Note</Text>
-            <NumberPlease
+            {/* <NumberPlease
                 digits={markRange}
                 values={mark}
                 onChange={[(values) => setMark(values), props.handleMarkChange]}
-            />
+            /> */}
         </View>
     )
 }

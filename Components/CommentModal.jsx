@@ -20,7 +20,7 @@ export default function CommentModal(props) {
             "image": props.movie.image,
             "comments": props.movie.comments
         }
-        console.log("Movie:" + movie);
+        console.log(movie);
         let comment = {
             "author": author,
             "content": content,
@@ -32,9 +32,13 @@ export default function CommentModal(props) {
             movie.title = props.movie.title;
             movie.synopsis = props.movie.synopsis;
             movie.image = props.movie.image;
+
+            props.commentEdit.author = comment.author;
+            props.commentEdit.content = comment.content;
+            props.commentEdit.mark = comment.mark;
             movie.comments = props.movie.comments;
 
-            firebase.updateMovie(movie);
+            firebase.updateMovie(movie, props.secret);
         } else {
             movie.id = props.movie.id;
             movie.title = props.movie.title;
@@ -44,7 +48,7 @@ export default function CommentModal(props) {
             console.log(props.movie);
             movie.comments = props.movie.comments;
             
-            firebase.updateMovie(movie);
+            firebase.updateMovie(movie, props.secret);
         }
         props.onClose()
     }
