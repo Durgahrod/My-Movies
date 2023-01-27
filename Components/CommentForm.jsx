@@ -1,5 +1,4 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native'
-import NumberPlease from "react-native-number-please";
 import React, { useState } from 'react'
 
 export default function CommentForm(props) {

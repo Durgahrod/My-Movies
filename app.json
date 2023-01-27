@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "Projet",
-    "slug": "Projet",
+    "name": "Froggy-Movies",
+    "slug": "Froggy-Movies",
     "version": "1.0.0",
+    "sdkVersion": "47.0.0",
     "orientation": "portrait",
     "icon": "./assets/grenouille.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/grenouille.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,12 +23,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/grenouille.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.durgahrod.FroggyMovies"
     },
     "web": {
       "favicon": "./assets/grenouille.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "804de25c-5ead-4f53-a0d8-32cb89c905b6"
+      }
     }
   }
 }

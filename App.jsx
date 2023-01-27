@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Button, Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import AddButton from './Components/AddButton';
 import MovieModal from './Components/MovieModal';
 import CommentListModal from './Components/CommentListModal';
 import Fire from './Fire';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function App() {
   const [isModalMovieVisible, setIsModalMovieVisible] = useState(false)
@@ -48,7 +49,7 @@ export default function App() {
         })
       }
     }
-  }, [])
+  }, [alphaAsc, secret])
 
   function deleteMovie(movie, secret) {
     const firebase = new Fire()
@@ -72,7 +73,6 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <AddButton key="orderBy" content="Ordre alphabetique" onButtonPress={() => { if (alphaAsc == true) { setAlphaAsc(false) } else { setAlphaAsc(true) }; console.log(alphaAsc); }} />
       <Text style={styles.title}>Bienvenu sur</Text>
       <Text style={styles.frog}>Froggy Movies</Text>
       <View>
@@ -96,13 +96,15 @@ export default function App() {
 
 
       <TextInput key="searchbar" placeholder='Rechercher' style={styles.searchBar} onChangeText={handleFilter} />
-
+      <AddButton key="orderBy" content="A-Z" onButtonPress={() => { if (alphaAsc == true) { setAlphaAsc(false) } else { setAlphaAsc(true) }}} />
       <View>
         {loading && <ActivityIndicator key="movies-loading" />}
       </View>
       <ScrollView>
         {movies.map(movie => (
-          <View style={styles.scrollView}>
+          <View style={secret ?
+            styles.scrollViewHard :
+            styles.scrollView}>
             <View style={styles.centered}>
               <Image
                 key={movie.id + 'image'}
@@ -135,7 +137,6 @@ export default function App() {
           </View>
         ))}
 
-
         {isModalMovieVisible && (
           <MovieModal isVisible={isModalMovieVisible} onClose={() => { setIsModalMovieVisible(false); setSelectedMovie("") }} movieEdit={selectedMovie} content="Fermer" secret={secret} />
         )}
@@ -145,10 +146,10 @@ export default function App() {
       </ScrollView>
 
 
+
+
       <AddButton key="add Movie" onButtonPress={() => setIsModalMovieVisible(true)} content="Ajouter un film" buttonColor="#008000" />
-      <View style={styles.hardButton}>
-        <AddButton key="secret" content="+18" onButtonPress={() => { if (secret == true) { setSecret(false) } else { setSecret(true) }; console.log(secret); }} buttonColor="red" />
-      </View>
+      <AddButton key="secret" content="+18" onButtonPress={() => { if (secret == true) { setSecret(false) } else { setSecret(true) } }} buttonColor="red" style={{borderRadius: 100}}/>
     </View>
   );
 }
@@ -179,7 +180,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#C0C0C0',
+    backgroundColor: '#a9f400',
+    padding: 5,
+  },
+  scrollViewHard: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#cd0048',
     padding: 5,
   },
   image: {
@@ -227,8 +235,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   hardButton: {
-    alignItems: 'center',
+    width: 60,
+    height: 60,
     justifyContent: 'center',
-    margin: 5
+    alignItems: 'center',
+    borderRadius: 100,
+    backgroundColor: 'red',
+  },
+  secretAge: {
+    color: 'white'
   }
 });

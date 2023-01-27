@@ -1,5 +1,5 @@
-import { View, Text, Modal, Button, StyleSheet, TextInput, ActivityIndicator, ScrollView, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, Modal, StyleSheet, TextInput, ScrollView, Image } from 'react-native'
+import React, { useState } from 'react'
 import AddButton from './AddButton';
 import Fire from '../Fire';
 import CommentModal from './CommentModal';
@@ -43,7 +43,7 @@ export default function CommentListModal(props) {
                     style={styles.icon}
                     source={'/assets/grenouille.png'}
                 />
-                <View style={styles.button}>
+                <View style={styles.buttons}>
                     <AddButton
                         onButtonPress={props.onClose}
                         title={props.content}
@@ -104,8 +104,11 @@ const styles = StyleSheet.create({
         paddingTop: 50,
     },
     frog: {
-        color: '#08000'
-    },
+        color: '#008000',
+        fontSize: 30,
+        fontWeight: 'bold',
+        // fontFamily: 'Helvetica',
+      },
     icon: {
         width: 50,
         height: 50,

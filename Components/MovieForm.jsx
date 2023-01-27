@@ -1,5 +1,5 @@
 import { View, Text, TextInput, StyleSheet, Button } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 
 export default function MovieForm(props) {
 

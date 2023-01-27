@@ -1,4 +1,4 @@
-import { View, Text, Modal, Button, StyleSheet } from 'react-native'
+import { View, Modal, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import MovieForm from './MovieForm';
 import AddButton from './AddButton';
@@ -68,7 +68,7 @@ export default function MovieModal(props) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#C0C0C0',
+        backgroundColor: '#a9f400',
     },
     modal: {
         width: 10,

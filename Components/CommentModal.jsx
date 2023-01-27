@@ -1,4 +1,4 @@
-import { View, Text, Modal, Button, StyleSheet } from 'react-native'
+import { View, Modal, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import AddButton from './AddButton';
 import Fire from '../Fire';
